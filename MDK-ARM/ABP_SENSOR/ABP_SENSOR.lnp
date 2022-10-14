@@ -4,6 +4,7 @@
 "abp_sensor\stm32f4xx_it.o"
 "abp_sensor\stm32f4xx_hal_msp.o"
 "abp_sensor\i2c-lcd.o"
+"abp_sensor\abp.o"
 "abp_sensor\stm32f4xx_hal_i2c.o"
 "abp_sensor\stm32f4xx_hal_i2c_ex.o"
 "abp_sensor\stm32f4xx_hal_rcc.o"

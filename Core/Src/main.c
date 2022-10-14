@@ -22,7 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <i2c-lcd.h>
-
+#include "ABP.h"
 #include "stdio.h"
 
 /* USER CODE END Includes */
@@ -46,18 +46,8 @@ I2C_HandleTypeDef hi2c1; //i2c kanalas sensoriui
 I2C_HandleTypeDef hi2c3; //i2c kanalas lcd
 
 /* USER CODE BEGIN PV */
-HAL_StatusTypeDef ret;
-uint8_t buf[4]; //duomenu nuskaitymo masyvas
-static const uint8_t ABP_ADDR = 0x28 << 1; // Use 8-bit address
-static const float LSB_slegio = 0.0006103515625; // lsb slegio 10/(2^14)=0.0006103515625 
-char klaidu_sk;
-float slegis; 
-float slegisa[100]; 
-float max_slegis=0;
-float min_slegis=99;
-short slegis_raw;
-int counteris=0;
 
+float Pressure;
 char my_str[17]; // temporary buffer for display line 
 /* USER CODE END PV */
 
@@ -113,17 +103,11 @@ int main(void) {
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-
-    ret = HAL_I2C_Master_Receive( & hi2c1, ABP_ADDR, buf, 4, HAL_MAX_DELAY);
-		if (ret != HAL_OK) {
-      klaidu_sk++; //jei šitas dideja reiskiasi kazkas blogai su sensoriumi (tiketina su prijungimu)
-    }
-	  slegis_raw = buf[1] + (buf[0] << 8);
-    slegis = slegis_raw * LSB_slegio; //paskaiciuojamas slegis
-    sprintf(my_str, "%02.12F", slegis);
+    Pressure=ABP_READ_DATA(&hi2c1);
+    sprintf(my_str, "%02.12F", Pressure);
     lcd_string_draw(my_str, 0, 1);
-    counteris++;
-    HAL_Delay(10);
+    
+    HAL_Delay(1000);
     HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
     /* USER CODE END WHILE */
 
